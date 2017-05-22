@@ -7,11 +7,14 @@ import android.media.AudioFormat.ENCODING_PCM_16BIT
 import android.media.AudioRecord
 import android.media.MediaRecorder.AudioSource.MIC
 import android.os.Bundle
+import android.os.Environment
 import com.jakewharton.rxbinding2.view.RxView
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 class MainActivity : Activity() {
@@ -21,10 +24,9 @@ class MainActivity : Activity() {
 		setContentView(R.layout.activity_main)
 		RxView.clicks(button)
 				.compose(RxPermissions(this)
-						.ensure(Manifest.permission.RECORD_AUDIO))
+						.ensure(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE))
 				.filter { it }
 				.observeOn(Schedulers.computation())
-				.debounce(3, TimeUnit.SECONDS)
 				.map { AudioRecord.getMinBufferSize(16000, CHANNEL_IN_MONO, ENCODING_PCM_16BIT) }
 				.doOnNext {
 					when (it) {
@@ -38,17 +40,15 @@ class MainActivity : Activity() {
 					}
 				}
 				.flatMap { recorder ->
-					Observable.just(recorder)
+					Completable.complete().subscribeOn(Schedulers.newThread()).delay(3, TimeUnit.SECONDS).subscribe { recorder.stop() }
+					return@flatMap Observable.just(recorder)
 							.subscribeOn(Schedulers.io())
 							.doFinally { recorder.release() }
 							.doOnNext { it.startRecording() }
 							.doOnNext {
-
-
+								File(Environment.getExternalStorageDirectory(), "test.wav")
 							}
-
 				}
-				.delay(3, TimeUnit.SECONDS)
 				.subscribe({ }, { it.printStackTrace() })
 	}
 
