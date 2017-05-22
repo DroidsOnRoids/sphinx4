@@ -1,3 +1,5 @@
-
+plugins {
+	id 'java'
+}
 description = 'Sphinx4 US English models'
 

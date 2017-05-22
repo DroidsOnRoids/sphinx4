@@ -1,52 +1,25 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-def getRepositoryUsername() {
-    return hasProperty('mavenUsername') ? mavenUsername : ""
+buildscript {
+	ext.kotlin_version = '1.1.2-4'
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:2.3.2'
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+		// NOTE: Do not place your application dependencies here; they belong
+		// in the individual module build.gradle files
+	}
 }
-        
-def getRepositoryPassword() {
-    return hasProperty('mavenPassword') ? mavenPassword : ""
+
+allprojects {
+	repositories {
+		jcenter()
+	}
 }
 
-allprojects() {
-    group = 'edu.cmu.sphinx'
-    version = '5prealpha-SNAPSHOT'
-}
-
-subprojects() {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-                }
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-                }
-            }
-        }
-    }
-    
-    repositories() {
-         mavenCentral()
-    }
-
-    compileJava.options.encoding = 'UTF-8'
-    javadoc.options.encoding = 'UTF-8'
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
-
-    task javadocJar(type: Jar) {
-        classifier = 'javadoc'
-        from javadoc
-    }
-    
-    task packageSources(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    artifacts.archives packageSources, javadocJar
+task clean(type: Delete) {
+	delete rootProject.buildDir
 }

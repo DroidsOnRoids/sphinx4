@@ -1,3 +1,6 @@
+plugins {
+    id 'java'
+}
 description = 'Sphinx4 core'
 
 dependencies {

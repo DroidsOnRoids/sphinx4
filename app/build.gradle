@@ -1,0 +1,25 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+	compileSdkVersion 25
+	buildToolsVersion "25.0.3"
+	defaultConfig {
+		applicationId "pl.droidsonroids.sphinxtest"
+		minSdkVersion 21
+		targetSdkVersion 25
+		versionCode 1
+	}
+}
+
+dependencies {
+	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+	compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+	compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+	compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4'
+	compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+}
+repositories {
+	mavenCentral()
+}
