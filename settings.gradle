@@ -1,3 +1,1 @@
 include ':app'
-include ':sphinx4-core'
-include ':sphinx4-data'
